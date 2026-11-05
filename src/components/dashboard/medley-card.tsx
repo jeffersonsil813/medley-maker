@@ -1,23 +1,25 @@
+import Link from "next/link";
 import { DashboardIcon } from "./dashboard-icons";
+import { formatUpdatedAt } from "@/features/library/library-utils";
 
-export type Medley = {
+export type MedleyCardData = {
   id: string;
   title: string;
   songs: string[];
-  key: string;
+  sectionCount: number;
   updatedAt: string;
   artwork: string;
 };
 
 const waveformHeights = [12, 20, 29, 17, 35, 24, 42, 27, 15, 31, 45, 20, 34, 14, 26, 38, 19, 31, 12, 24, 40, 18, 29, 14, 34, 21, 42, 16, 27, 12, 32, 19, 39, 24, 14, 30, 44, 18, 27, 13, 35, 21, 31, 16, 40, 24, 12, 28];
 
-export function MedleyCard({ medley }: { medley: Medley }) {
+export function MedleyCard({ medley }: { medley: MedleyCardData }) {
   return (
-    <article className="group rounded-[22px] border border-white/[0.075] bg-[#121613] p-3.5 transition duration-300 hover:-translate-y-1 hover:border-[#c9a875]/25 hover:bg-[#151a16] sm:p-4">
-      <div
-        className={`relative flex h-[128px] overflow-hidden rounded-[16px] ${medley.artwork}`}
-        aria-hidden="true"
-      >
+    <Link
+      href={`/medleys/${medley.id}`}
+      className="group block rounded-[22px] border border-white/[0.075] bg-[#121613] p-3.5 transition duration-300 hover:-translate-y-1 hover:border-[#c9a875]/25 hover:bg-[#151a16] sm:p-4"
+    >
+      <div className={`relative flex h-[128px] overflow-hidden rounded-[16px] ${medley.artwork}`} aria-hidden="true">
         <div className="absolute inset-0 bg-[linear-gradient(110deg,rgba(0,0,0,.25),transparent_65%)]" />
         <div className="absolute -right-8 -top-16 size-48 rounded-full border border-white/[0.08]" />
         <div className="absolute -right-1 -top-9 size-36 rounded-full border border-white/[0.09]" />
@@ -26,7 +28,7 @@ export function MedleyCard({ medley }: { medley: Medley }) {
             Cifra de medley
           </span>
           <span className="rounded-full border border-white/[0.14] bg-black/15 px-2.5 py-1 text-[10px] font-medium text-white/80 backdrop-blur-sm">
-            {medley.songs.length} músicas
+            {medley.sectionCount} trechos
           </span>
         </div>
         <div className="absolute inset-x-4 bottom-4 flex h-12 items-center justify-center gap-[3px] opacity-80">
@@ -59,18 +61,13 @@ export function MedleyCard({ medley }: { medley: Medley }) {
         </div>
 
         <div className="mt-4 flex items-center justify-between border-t border-white/[0.065] pt-3.5 text-[11px] text-[#778078]">
-          <span className="inline-flex items-center gap-1.5">
-            <span className="flex size-[19px] items-center justify-center rounded-md bg-[#c9a875]/10 text-[10px] font-semibold text-[#d6b98c]">
-              {medley.key}
-            </span>
-            Tonalidade
-          </span>
+          <span>{medley.songs.length} {medley.songs.length === 1 ? "música" : "músicas"}</span>
           <span className="inline-flex items-center gap-1.5">
             <DashboardIcon name="calendar" size={13} />
-            {medley.updatedAt}
+            {formatUpdatedAt(medley.updatedAt)}
           </span>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }

@@ -1,7 +1,7 @@
 # SDD — Medley Maker
 
 **Software Design Document**  
-**Status:** rascunho inicial  
+**Status:** em evolução
 **Atualizado em:** 5 de novembro de 2026
 
 ## 1. Propósito
@@ -30,13 +30,12 @@ O projeto também é um espaço de aprendizagem para seu desenvolvedor, que pret
 
 ### Ainda não definido
 
-Os detalhes a seguir não foram especificados e não devem ser tratados como requisitos até serem decididos:
+Os detalhes a seguir permanecem em aberto e não devem ser tratados como requisitos até serem decididos:
 
 - Como músicas e cifras serão importadas de fontes externas além do cadastro manual da biblioteca.
-- Como o usuário selecionará e editará os trechos.
 - Quais elementos uma cifra poderá conter além de texto e acordes.
-- Como a ordem e as transições entre trechos serão organizadas.
-- Como os medleys serão salvos, exportados, compartilhados ou impressos.
+- Como transições entre trechos serão representadas.
+- Se os medleys serão exportados, compartilhados ou impressos.
 - Se e como os dados serão sincronizados além do armazenamento local deste navegador.
 - Se haverá contas, colaboração ou acesso sem autenticação.
 - Se a IA fará parte do produto e, em caso afirmativo, quais tarefas realizará.
@@ -48,12 +47,12 @@ O público indicado é formado por músicos, com atenção especial a músicos d
 
 ## 6. Requisitos de produto em alto nível
 
-Estes requisitos são uma tradução direta do objetivo declarado e ainda precisam ser detalhados antes da implementação das funcionalidades:
+Requisitos aprovados para as etapas implementadas:
 
-1. A aplicação deverá permitir compor uma cifra de medley que reúna trechos de músicas diferentes.
-2. A cifra resultante deverá ser organizada e personalizada pelo usuário.
-
-Não estão definidos critérios de aceitação, regras musicais, limites de conteúdo ou comportamento para esses requisitos.
+1. A aplicação permite compor um medley a partir de seções selecionadas na biblioteca.
+2. A sequência é uma lista livre de trechos, ordenável com controles de mover para cima/baixo.
+3. O medley salvo pode ser visualizado e editado; cada trecho mantém uma cópia do conteúdo e dos metadados no momento da seleção.
+4. A persistência inicial dos medleys é local ao navegador, independente da biblioteca.
 
 ### 6.1 Etapa 1 — Biblioteca de músicas
 
@@ -68,6 +67,21 @@ As decisões abaixo foram definidas para a primeira etapa funcional:
 - A biblioteca oferece cadastro, edição, visualização, exclusão com confirmação e pesquisa por título ou artista.
 - A persistência inicial usa `localStorage`, com chave `medley-maker:song-library` e envelope de dados na versão `1`. Esse armazenamento é local ao navegador e não sincroniza entre dispositivos.
 - Esta etapa não implementa criação ou edição de medleys.
+
+### 6.2 Etapa 2 — Criador de medleys
+
+Decisões aprovadas em conjunto para o criador:
+
+- A área de medleys tem uma página de listagem em `/medleys`, criação em `/medleys/novo` e edição/visualização em `/medleys/[id]`.
+- A composição é uma lista livre de trechos. Cada seção escolhida vira um item ordenável independentemente, mesmo quando vários itens vêm da mesma música.
+- A seleção ocorre a partir das músicas e seções da biblioteca, com pesquisa pelo título ou artista e possibilidade de adicionar várias seções.
+- A ordem pode ser ajustada com controles para mover trechos e grupos de músicas para cima ou para baixo; cada trecho também pode ser removido individualmente ou junto com todos os trechos de sua música.
+- A pré-visualização apresenta os trechos em sequência, incluindo título da música, seção, artista, tom original e conteúdo ChordPro.
+- Cada item salva identificadores de origem e cópias do título, artista, tom, seção e conteúdo. Alterações e exclusões posteriores da biblioteca não alteram cifras de medleys existentes.
+- O medley contém identificador, nome, descrição opcional, datas de criação e atualização e a lista ordenada de itens.
+- A persistência usa `localStorage`, chave `medley-maker:medleys` e envelope versão `1`, separado do armazenamento da biblioteca.
+- O dashboard mantém sua estrutura visual e exibe os medleys reais mais recentes, com acesso à criação e à lista completa.
+- Não fazem parte desta etapa: transposição automática, exportação PDF, autenticação, banco de dados externo ou serviços de terceiros.
 
 ## 7. Base técnica atual
 
@@ -102,7 +116,7 @@ Essa estrutura é uma proposta, não uma exigência do framework. O projeto já 
 
 ### 8.1 Visão conceitual do domínio
 
-O objetivo sugere os conceitos **medley**, **música**, **trecho** e **cifra**. O modelo de dados da biblioteca de músicas e suas seções está definido na seção 6.1. O modelo de medleys, seus trechos e as regras de combinação ainda não foram definidos.
+O modelo da biblioteca de músicas e seções está definido na seção 6.1. O medley contém uma sequência de itens independentes, cada um referenciando a música e a seção de origem e mantendo uma cópia dos metadados e conteúdo selecionados. A lista de itens guarda a posição explícita de cada trecho.
 
 ### 8.2 Integrações e serviços
 
@@ -125,14 +139,13 @@ Nenhum banco de dados, serviço de autenticação, armazenamento de arquivos, AP
 | Biblioteca | Rota `/biblioteca`, modais para cadastro/edição/visualização e confirmação de exclusão | Decisão tomada em conjunto para esta etapa. |
 | Organização da biblioteca | `src/features/library/` | Decisão tomada em conjunto; a rota Next correspondente fica em `src/app/biblioteca/`. |
 | Biblioteca de músicas | Primeira etapa funcional implementada | CRUD local, seções ChordPro, busca e interface responsiva. |
+| Criador de medleys | Etapa 2 definida e implementada | Lista livre de trechos, rotas dedicadas, snapshots independentes da biblioteca e persistência local versão 1. |
 
 ## 10. Etapas sugeridas para evoluir o documento
 
-1. Definir em conjunto como músicas e seções da biblioteca serão usadas na composição de um medley.
-2. Decidir o fluxo e as regras de composição antes de iniciar o criador de medleys.
-3. Especificar critérios de aceitação para as decisões aprovadas.
-4. Detalhar persistência remota ou integrações apenas se forem necessárias para o fluxo escolhido.
-5. Implementar as próximas etapas em incrementos pequenos, revisando este documento após cada decisão.
+1. Definir em conjunto os próximos recursos do produto, sem presumir transposição, exportação ou sincronização.
+2. Detalhar persistência remota ou integrações apenas se forem necessárias para um fluxo aprovado.
+3. Implementar as próximas etapas em incrementos pequenos, revisando este documento após cada decisão.
 
 ## 11. Glossário
 

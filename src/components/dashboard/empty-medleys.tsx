@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { DashboardIcon } from "./dashboard-icons";
 
 export function EmptyMedleys() {
@@ -16,13 +17,13 @@ export function EmptyMedleys() {
       <p className="relative mx-auto mt-2 max-w-md text-sm leading-6 text-[#899188]">
         Reúna canções que combinam com o momento e organize tudo em uma cifra feita para você.
       </p>
-      <button
-        type="button"
+      <Link
+        href="/medleys/novo"
         className="relative mt-6 inline-flex h-11 items-center gap-2 rounded-xl border border-white/[0.12] bg-white/[0.04] px-4 text-sm font-medium text-[#e8ebe6] transition hover:border-[#c9a875]/30 hover:bg-white/[0.07]"
       >
         <DashboardIcon name="plus" size={17} />
         Criar meu primeiro medley
-      </button>
+      </Link>
     </div>
   );
 }

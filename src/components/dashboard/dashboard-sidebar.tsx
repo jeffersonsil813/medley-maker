@@ -8,7 +8,7 @@ const navigationItems: {
   key: "overview" | "medleys" | "library";
 }[] = [
   { href: "/", icon: "grid", label: "Visão geral", key: "overview" },
-  { href: "/#recentes", icon: "music", label: "Meus medleys", key: "medleys" },
+  { href: "/medleys", icon: "music", label: "Meus medleys", key: "medleys" },
   { href: "/biblioteca", icon: "library", label: "Biblioteca", key: "library" },
 ];
 

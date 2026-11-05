@@ -1,35 +1,8 @@
+import Link from "next/link";
 import { DashboardSidebar } from "@/components/dashboard/dashboard-sidebar";
-import { EmptyMedleys } from "@/components/dashboard/empty-medleys";
 import { LibraryAccess } from "@/components/dashboard/library-access";
 import { DashboardIcon } from "@/components/dashboard/dashboard-icons";
-import { MedleyCard, type Medley } from "@/components/dashboard/medley-card";
-
-const recentMedleys: Medley[] = [
-  {
-    id: "casa-adoracao",
-    title: "Casa de adoração",
-    songs: ["A Casa É Sua", "Lugar Secreto", "Santo Espírito"],
-    key: "G",
-    updatedAt: "há 2 horas",
-    artwork: "bg-[linear-gradient(125deg,#4b5945_0%,#26382e_48%,#18241f_100%)]",
-  },
-  {
-    id: "graca-sobre-graca",
-    title: "Graça sobre graça",
-    songs: ["Bondade de Deus", "Me Atraiu", "Eu Navegarei"],
-    key: "D",
-    updatedAt: "ontem",
-    artwork: "bg-[linear-gradient(125deg,#6a5144_0%,#493b35_48%,#282522_100%)]",
-  },
-  {
-    id: "tua-presenca",
-    title: "Tua presença",
-    songs: ["Yeshua", "Pra Sempre", "Que Se Abram os Céus"],
-    key: "A",
-    updatedAt: "28 out, 2026",
-    artwork: "bg-[linear-gradient(125deg,#4b4c69_0%,#323345_48%,#202128_100%)]",
-  },
-];
+import { RecentMedleys } from "@/features/medleys/components/recent-medleys";
 
 export default function Home() {
   return (
@@ -58,45 +31,16 @@ export default function Home() {
                 </p>
               </div>
 
-              <button
-                type="button"
+              <Link
+                href="/medleys/novo"
                 className="inline-flex h-12 w-full shrink-0 items-center justify-center gap-2.5 rounded-xl bg-[#d4b582] px-5 text-sm font-semibold text-[#242016] shadow-[0_8px_28px_rgba(195,160,106,.12)] transition hover:-translate-y-0.5 hover:bg-[#e0c596] sm:w-auto"
               >
                 <DashboardIcon name="plus" size={18} />
                 Criar novo medley
-              </button>
+              </Link>
             </header>
 
-            <section id="recentes" aria-labelledby="recent-medleys-heading" className="pt-8 sm:pt-10">
-              <div className="mb-5 flex items-end justify-between gap-4 sm:mb-6">
-                <div>
-                  <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.19em] text-[#737d74]">
-                    Seu repertório em construção
-                  </p>
-                  <h2
-                    id="recent-medleys-heading"
-                    className="text-xl font-semibold tracking-[-0.04em] text-[#edf0eb] sm:text-[22px]"
-                  >
-                    Medleys recentes
-                  </h2>
-                </div>
-                {recentMedleys.length > 0 && (
-                  <span className="mb-0.5 inline-flex items-center gap-1.5 rounded-full border border-white/[0.07] bg-white/[0.025] px-2.5 py-1.5 text-[10px] font-medium text-[#929a92] sm:text-xs">
-                    {recentMedleys.length} medleys
-                  </span>
-                )}
-              </div>
-
-              {recentMedleys.length > 0 ? (
-                <div className="grid gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3">
-                  {recentMedleys.map((medley) => (
-                    <MedleyCard key={medley.id} medley={medley} />
-                  ))}
-                </div>
-              ) : (
-                <EmptyMedleys />
-              )}
-            </section>
+            <RecentMedleys />
 
             <div className="mt-8 sm:mt-10">
               <LibraryAccess />

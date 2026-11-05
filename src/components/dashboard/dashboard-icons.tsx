@@ -1,10 +1,13 @@
 export type DashboardIconName =
   | "arrow-up-right"
+  | "chevron-down"
   | "calendar"
   | "check"
   | "chevron-right"
+  | "chevron-up"
   | "disc"
   | "edit"
+  | "eye"
   | "grid"
   | "library"
   | "music"
@@ -65,6 +68,18 @@ export function DashboardIcon({
           <path d="m9 18 6-6-6-6" />
         </svg>
       );
+    case "chevron-up":
+      return (
+        <svg {...common}>
+          <path d="m18 15-6-6-6 6" />
+        </svg>
+      );
+    case "chevron-down":
+      return (
+        <svg {...common}>
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      );
     case "disc":
       return (
         <svg {...common}>
@@ -78,6 +93,13 @@ export function DashboardIcon({
         <svg {...common}>
           <path d="m14.2 5.8 4 4M4 20l4.3-.9L19.6 7.8a2.1 2.1 0 0 0-3-3L5.3 16.1 4 20Z" />
           <path d="M12.5 20H20" />
+        </svg>
+      );
+    case "eye":
+      return (
+        <svg {...common}>
+          <path d="M2.5 12s3.3-6 9.5-6 9.5 6 9.5 6-3.3 6-9.5 6-9.5-6-9.5-6Z" />
+          <circle cx="12" cy="12" r="2.5" />
         </svg>
       );
     case "grid":
