@@ -1,4 +1,5 @@
 import { DashboardIcon } from "./dashboard-icons";
+import Link from "next/link";
 
 const libraryLines = [20, 35, 25, 44, 31, 52, 29, 42, 22, 38, 50, 27, 42, 32, 20, 45, 29, 38, 24];
 
@@ -25,13 +26,13 @@ export function LibraryAccess() {
           <p className="mt-2 max-w-lg text-sm leading-6 text-[#899188]">
             Acesse suas canções e encontre as que podem se transformar em um novo medley.
           </p>
-          <a
-            href="#biblioteca"
+          <Link
+            href="/biblioteca"
             className="mt-5 inline-flex h-10 items-center gap-2 rounded-xl border border-white/[0.1] bg-white/[0.035] px-3.5 text-xs font-medium text-[#dce1da] transition hover:border-[#c9a875]/25 hover:bg-white/[0.07]"
           >
             Acessar biblioteca
             <DashboardIcon name="arrow-up-right" size={15} />
-          </a>
+          </Link>
         </div>
 
         <div aria-hidden="true" className="relative hidden h-[132px] w-[254px] items-center justify-center sm:flex">

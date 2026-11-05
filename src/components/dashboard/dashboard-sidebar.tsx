@@ -5,11 +5,11 @@ const navigationItems: {
   href: string;
   icon: DashboardIconName;
   label: string;
-  current?: boolean;
+  key: "overview" | "medleys" | "library";
 }[] = [
-  { href: "#inicio", icon: "grid", label: "Visão geral", current: true },
-  { href: "#recentes", icon: "music", label: "Meus medleys" },
-  { href: "#biblioteca", icon: "library", label: "Biblioteca" },
+  { href: "/", icon: "grid", label: "Visão geral", key: "overview" },
+  { href: "/#recentes", icon: "music", label: "Meus medleys", key: "medleys" },
+  { href: "/biblioteca", icon: "library", label: "Biblioteca", key: "library" },
 ];
 
 function BrandMark() {
@@ -20,7 +20,13 @@ function BrandMark() {
   );
 }
 
-function NavigationLinks({ compact = false }: { compact?: boolean }) {
+function NavigationLinks({
+  compact = false,
+  activeItem,
+}: {
+  compact?: boolean;
+  activeItem: "overview" | "medleys" | "library";
+}) {
   return (
     <nav
       aria-label="Navegação principal"
@@ -28,13 +34,13 @@ function NavigationLinks({ compact = false }: { compact?: boolean }) {
     >
       {navigationItems.map((item) => (
         <Link
-          key={item.label}
+          key={item.key}
           href={item.href}
-          aria-current={item.current ? "page" : undefined}
+          aria-current={item.key === activeItem ? "page" : undefined}
           className={[
             "group flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-medium transition-colors",
             compact ? "px-3 py-2.5" : "",
-            item.current
+            item.key === activeItem
               ? "bg-white/[0.07] text-[#f3eee4] shadow-[inset_2px_0_0_#c9a875]"
               : "text-[#8c958d] hover:bg-white/[0.045] hover:text-[#e9ece7]",
           ].join(" ")}
@@ -42,7 +48,7 @@ function NavigationLinks({ compact = false }: { compact?: boolean }) {
           <DashboardIcon
             name={item.icon}
             size={18}
-            className={item.current ? "text-[#d6b98c]" : "text-[#778078] group-hover:text-[#b9c2ba]"}
+            className={item.key === activeItem ? "text-[#d6b98c]" : "text-[#778078] group-hover:text-[#b9c2ba]"}
           />
           <span className={compact ? "text-xs sm:text-sm" : ""}>{item.label}</span>
         </Link>
@@ -51,11 +57,15 @@ function NavigationLinks({ compact = false }: { compact?: boolean }) {
   );
 }
 
-export function DashboardSidebar() {
+export function DashboardSidebar({
+  activeItem = "overview",
+}: {
+  activeItem?: "overview" | "medleys" | "library";
+}) {
   return (
     <>
       <aside className="sticky top-0 hidden h-dvh w-[252px] shrink-0 flex-col border-r border-white/[0.065] bg-[#0d100e] px-5 py-7 lg:flex">
-        <Link href="#inicio" className="mb-12 flex items-center gap-3 px-1">
+        <Link href="/" className="mb-12 flex items-center gap-3 px-1">
           <BrandMark />
           <span>
             <span className="block text-[15px] font-semibold tracking-[-0.03em] text-[#f0f2ee]">
@@ -70,7 +80,7 @@ export function DashboardSidebar() {
         <p className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#626b63]">
           Seu espaço
         </p>
-        <NavigationLinks />
+        <NavigationLinks activeItem={activeItem} />
 
         <div className="mt-auto rounded-2xl border border-white/[0.06] bg-white/[0.025] p-4">
           <span className="mb-3 flex size-8 items-center justify-center rounded-xl bg-[#c9a875]/10 text-[#d6b98c]">
@@ -97,7 +107,7 @@ export function DashboardSidebar() {
           </span>
         </div>
         <div className="mt-4 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <NavigationLinks compact />
+          <NavigationLinks compact activeItem={activeItem} />
         </div>
       </div>
     </>

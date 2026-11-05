@@ -1,13 +1,18 @@
 export type DashboardIconName =
   | "arrow-up-right"
   | "calendar"
+  | "check"
   | "chevron-right"
   | "disc"
+  | "edit"
   | "grid"
   | "library"
   | "music"
   | "plus"
+  | "search"
   | "sparkle"
+  | "trash"
+  | "x"
   | "wave";
 
 type DashboardIconProps = {
@@ -48,6 +53,12 @@ export function DashboardIcon({
           <path d="M7.5 3.5v3M16.5 3.5v3M3.5 9.5h17" />
         </svg>
       );
+    case "check":
+      return (
+        <svg {...common}>
+          <path d="m5 12 4.5 4.5L19 7" />
+        </svg>
+      );
     case "chevron-right":
       return (
         <svg {...common}>
@@ -60,6 +71,13 @@ export function DashboardIcon({
           <circle cx="12" cy="12" r="8.5" />
           <circle cx="12" cy="12" r="2" />
           <path d="M12 3.5a8.5 8.5 0 0 1 8.5 8.5" />
+        </svg>
+      );
+    case "edit":
+      return (
+        <svg {...common}>
+          <path d="m14.2 5.8 4 4M4 20l4.3-.9L19.6 7.8a2.1 2.1 0 0 0-3-3L5.3 16.1 4 20Z" />
+          <path d="M12.5 20H20" />
         </svg>
       );
     case "grid":
@@ -92,6 +110,13 @@ export function DashboardIcon({
           <path d="M12 5v14M5 12h14" />
         </svg>
       );
+    case "search":
+      return (
+        <svg {...common}>
+          <circle cx="10.8" cy="10.8" r="6.8" />
+          <path d="m16 16 4.5 4.5" />
+        </svg>
+      );
     case "sparkle":
       return (
         <svg {...common}>
@@ -103,6 +128,18 @@ export function DashboardIcon({
       return (
         <svg {...common}>
           <path d="M3 12h2l2.2-6 4.1 12L14 9l2.2 6 2-3H21" />
+        </svg>
+      );
+    case "trash":
+      return (
+        <svg {...common}>
+          <path d="M4 7h16M10 11v5M14 11v5M5.5 7l1 13h11l1-13M9 7V4h6v3" />
+        </svg>
+      );
+    case "x":
+      return (
+        <svg {...common}>
+          <path d="m6 6 12 12M18 6 6 18" />
         </svg>
       );
   }
