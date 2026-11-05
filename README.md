@@ -72,8 +72,8 @@ The project was developed with support from ChatGPT Codex throughout the plannin
 
 ## Live demo
 
-**Deployment URL:** _To be added._
+**Deployment URL:** [https://medley-makerr.vercel.app/](https://medley-makerr.vercel.app/)
 
 ## License
 
-No open-source license has been added yet.
+This project is licensed under the [MIT License](LICENSE).
