@@ -1,5 +1,6 @@
 import { isMusicalKey, SONG_SECTION_TYPES, type SongSectionType } from "@/features/library/song-types";
-import type { Medley, MedleyItem } from "./medley-types";
+import type { Medley, MedleyItem, MedleyTransposition } from "./medley-types";
+import type { AccidentalPreference } from "@/features/transposition/transposition-engine";
 
 export const MEDLEY_STORAGE_KEY = "medley-maker:medleys";
 export const MEDLEY_STORAGE_VERSION = 1;
@@ -41,8 +42,24 @@ function isMedley(value: unknown): value is Medley {
     typeof medley.createdAt === "string" &&
     typeof medley.updatedAt === "string" &&
     Array.isArray(medley.items) &&
-    medley.items.every(isMedleyItem)
+    medley.items.every(isMedleyItem) &&
+    (medley.transposition === undefined || isMedleyTransposition(medley.transposition))
   );
+}
+
+function isMedleyTransposition(value: unknown): value is MedleyTransposition {
+  if (!value || typeof value !== "object") return false;
+
+  const transposition = value as Partial<MedleyTransposition>;
+  return (
+    isMusicalKey(transposition.referenceKey) &&
+    isMusicalKey(transposition.targetKey) &&
+    isAccidentalPreference(transposition.notation)
+  );
+}
+
+function isAccidentalPreference(value: unknown): value is AccidentalPreference {
+  return value === "sharp" || value === "flat" || value === "auto";
 }
 
 export function getMedleySnapshot() {

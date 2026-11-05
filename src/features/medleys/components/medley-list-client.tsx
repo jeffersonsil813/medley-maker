@@ -2,11 +2,15 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { Suspense } from "react";
 import { DashboardIcon } from "@/components/dashboard/dashboard-icons";
 import { EmptyMedleys } from "@/components/dashboard/empty-medleys";
 import { MedleyCard } from "@/components/dashboard/medley-card";
 import { normalizeMedleySearch } from "../medley-utils";
+import type { Medley } from "../medley-types";
 import { useMedleyLibrary } from "../use-medley-library";
+import { DeleteMedleyDialog } from "./delete-medley-dialog";
+import { MedleySaveConfirmation } from "./medley-save-confirmation";
 
 const artworkPalettes = [
   "bg-[linear-gradient(125deg,#4b5945_0%,#26382e_48%,#18241f_100%)]",
@@ -15,8 +19,21 @@ const artworkPalettes = [
 ];
 
 export function MedleyListClient() {
-  const { medleys, isLoaded, storageError } = useMedleyLibrary();
+  const { medleys, isLoaded, canWrite, storageError, deleteMedley } = useMedleyLibrary();
   const [query, setQuery] = useState("");
+  const [medleyPendingDeletion, setMedleyPendingDeletion] = useState<Medley | null>(null);
+  const [feedback, setFeedback] = useState<string | null>(null);
+
+  function confirmDeleteMedley() {
+    if (!medleyPendingDeletion) return;
+
+    if (deleteMedley(medleyPendingDeletion.id)) {
+      setFeedback(`“${medleyPendingDeletion.title}” foi excluído.`);
+      setMedleyPendingDeletion(null);
+    } else {
+      setFeedback("Não foi possível excluir o medley. Verifique o armazenamento do navegador e tente novamente.");
+    }
+  }
 
   const filteredMedleys = useMemo(() => {
     const normalizedQuery = normalizeMedleySearch(query);
@@ -87,6 +104,16 @@ export function MedleyListClient() {
           </p>
         )}
 
+        <Suspense fallback={null}>
+          <MedleySaveConfirmation />
+        </Suspense>
+
+        {feedback && (
+          <p role="status" className="mb-5 rounded-xl border border-white/[0.08] bg-white/[0.025] px-4 py-3 text-sm text-[#c8d0c7]">
+            {feedback}
+          </p>
+        )}
+
         {!isLoaded ? (
           <div role="status" className="rounded-2xl border border-white/[0.07] bg-[#121613] p-8 text-sm text-[#899188]">
             Carregando medleys…
@@ -118,11 +145,19 @@ export function MedleyListClient() {
                   updatedAt: medley.updatedAt,
                   artwork: artworkPalettes[index % artworkPalettes.length],
                 }}
+                onDelete={canWrite ? () => { setFeedback(null); setMedleyPendingDeletion(medley); } : undefined}
               />
             ))}
           </div>
         )}
       </section>
+      {medleyPendingDeletion && (
+        <DeleteMedleyDialog
+          medley={medleyPendingDeletion}
+          onClose={() => setMedleyPendingDeletion(null)}
+          onConfirm={confirmDeleteMedley}
+        />
+      )}
     </>
   );
 }

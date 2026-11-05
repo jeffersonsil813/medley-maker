@@ -13,12 +13,10 @@ export type MedleyCardData = {
 
 const waveformHeights = [12, 20, 29, 17, 35, 24, 42, 27, 15, 31, 45, 20, 34, 14, 26, 38, 19, 31, 12, 24, 40, 18, 29, 14, 34, 21, 42, 16, 27, 12, 32, 19, 39, 24, 14, 30, 44, 18, 27, 13, 35, 21, 31, 16, 40, 24, 12, 28];
 
-export function MedleyCard({ medley }: { medley: MedleyCardData }) {
+export function MedleyCard({ medley, onDelete }: { medley: MedleyCardData; onDelete?: () => void }) {
   return (
-    <Link
-      href={`/medleys/${medley.id}`}
-      className="group block rounded-[22px] border border-white/[0.075] bg-[#121613] p-3.5 transition duration-300 hover:-translate-y-1 hover:border-[#c9a875]/25 hover:bg-[#151a16] sm:p-4"
-    >
+    <article className="group relative rounded-[22px] border border-white/[0.075] bg-[#121613] p-3.5 transition duration-300 hover:-translate-y-1 hover:border-[#c9a875]/25 hover:bg-[#151a16] sm:p-4">
+      <Link href={`/medleys/${medley.id}`} className="block">
       <div className={`relative flex h-[128px] overflow-hidden rounded-[16px] ${medley.artwork}`} aria-hidden="true">
         <div className="absolute inset-0 bg-[linear-gradient(110deg,rgba(0,0,0,.25),transparent_65%)]" />
         <div className="absolute -right-8 -top-16 size-48 rounded-full border border-white/[0.08]" />
@@ -60,14 +58,28 @@ export function MedleyCard({ medley }: { medley: MedleyCardData }) {
           </span>
         </div>
 
-        <div className="mt-4 flex items-center justify-between border-t border-white/[0.065] pt-3.5 text-[11px] text-[#778078]">
+      </div>
+      </Link>
+      <div className="mt-3 flex items-center justify-between gap-2 border-t border-white/[0.065] px-1 pt-3.5 text-[11px] text-[#778078]">
+        <div className="flex min-w-0 items-center justify-between gap-3">
           <span>{medley.songs.length} {medley.songs.length === 1 ? "música" : "músicas"}</span>
           <span className="inline-flex items-center gap-1.5">
             <DashboardIcon name="calendar" size={13} />
             {formatUpdatedAt(medley.updatedAt)}
           </span>
         </div>
+        {onDelete && (
+          <button
+            type="button"
+            onClick={onDelete}
+            aria-label={`Excluir medley ${medley.title}`}
+            title="Excluir medley"
+            className="flex size-8 shrink-0 items-center justify-center rounded-lg text-[#8a7775] transition hover:bg-red-400/[0.09] hover:text-red-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d4b582]"
+          >
+            <DashboardIcon name="trash" size={15} />
+          </button>
+        )}
       </div>
-    </Link>
+    </article>
   );
 }

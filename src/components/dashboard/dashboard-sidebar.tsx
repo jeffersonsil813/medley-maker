@@ -69,7 +69,7 @@ export function DashboardSidebar({
           <BrandMark />
           <span>
             <span className="block text-[15px] font-semibold tracking-[-0.03em] text-[#f0f2ee]">
-              medley maker
+              Medley Maker
             </span>
             <span className="mt-0.5 block text-[10px] font-medium uppercase tracking-[0.2em] text-[#798279]">
               música em harmonia
@@ -99,7 +99,7 @@ export function DashboardSidebar({
           <BrandMark />
           <span>
             <span className="block text-sm font-semibold tracking-[-0.03em] text-[#f0f2ee]">
-              medley maker
+              Medley Maker
             </span>
             <span className="block text-[9px] font-medium uppercase tracking-[0.2em] text-[#798279]">
               música em harmonia

@@ -36,3 +36,16 @@ export function reorderSongGroup(items: MedleyItem[], songId: string, direction:
 export function getMedleySongs(items: MedleyItem[]) {
   return [...new Map(items.map((item) => [item.sourceSongId, item])).values()];
 }
+
+export function getSuggestedMedleyTitle(items: MedleyItem[]) {
+  const orderedItems = [...items].sort((first, second) => first.position - second.position);
+  const uniqueSongs = new Map<string, string>();
+
+  for (const item of orderedItems) {
+    if (!uniqueSongs.has(item.sourceSongId)) {
+      uniqueSongs.set(item.sourceSongId, item.songTitleSnapshot);
+    }
+  }
+
+  return [...uniqueSongs.values()].join(" + ");
+}

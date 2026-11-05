@@ -3,7 +3,7 @@ export type ChordProPart =
   | { type: "chord"; value: string };
 
 // Covers common chord roots, qualities, extensions, and slash bass notes.
-const CHORD_PATTERN = /\[((?:[A-G](?:#|b)?)(?:(?:maj|min|m|M|dim|aug|sus(?:2|4)?|add\d+|°|ø)?\d*(?:sus(?:2|4)?|add\d+)?)(?:\/[A-G](?:#|b)?)?)\]/g;
+const CHORD_PATTERN = /\[((?:[A-G](?:#|b)?)(?:(?:maj|min|m|M|dim|aug|sus(?:2|4)?|add\d+|°|ø)?\d*(?:sus(?:2|4)?|add\d+)?(?:\((?:[#b]?\d+|sus(?:2|4)?|add\d+)(?:,[#b]?\d+)*\))*)(?:\/[A-G](?:#|b)?)?)\]/g;
 
 export function parseChordPro(content: string): ChordProPart[] {
   const parts: ChordProPart[] = [];

@@ -16,6 +16,8 @@ import {
   type SongSectionType,
 } from "../song-types";
 import { DialogShell } from "./dialog-shell";
+import { SongTranspositionPanel } from "@/features/transposition/components/song-transposition-panel";
+import { getTranspositionKeyOptions } from "@/features/transposition/transposition-options";
 
 type SongFormDialogProps = {
   song?: Song;
@@ -45,6 +47,16 @@ export function SongFormDialog({ song, onClose, onSubmit }: SongFormDialogProps)
       : [createBlankSection(0)],
   );
   const [saveError, setSaveError] = useState<string | null>(null);
+
+  const editableSong = song && isMusicalKey(originalKey)
+    ? {
+        ...song,
+        title,
+        artist,
+        originalKey,
+        sections,
+      }
+    : null;
 
   function updateSection(id: string, update: Partial<SongSection>) {
     setSections((current) =>
@@ -153,6 +165,14 @@ export function SongFormDialog({ song, onClose, onSubmit }: SongFormDialogProps)
               </optgroup>
             </select>
           </label>
+
+          {editableSong && (
+            <SongTranspositionPanel
+              key={`${editableSong.id}:${editableSong.originalKey}`}
+              song={editableSong}
+              keyOptions={getTranspositionKeyOptions(editableSong.originalKey, false)}
+            />
+          )}
 
           <div className="border-t border-white/[0.07] pt-5">
             <div className="mb-4 flex items-start justify-between gap-4">

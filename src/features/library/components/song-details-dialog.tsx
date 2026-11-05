@@ -5,6 +5,8 @@ import { formatUpdatedAt } from "../library-utils";
 import { SONG_SECTION_LABELS, type Song } from "../song-types";
 import { ChordProView } from "./chordpro-view";
 import { DialogShell } from "./dialog-shell";
+import { SongTranspositionPanel } from "@/features/transposition/components/song-transposition-panel";
+import { getTranspositionKeyOptions } from "@/features/transposition/transposition-options";
 
 type SongDetailsDialogProps = {
   song: Song;
@@ -28,6 +30,11 @@ export function SongDetailsDialog({ song, onClose, onEdit }: SongDetailsDialogPr
             Atualizada em {formatUpdatedAt(song.updatedAt)}
           </span>
         </div>
+
+        <SongTranspositionPanel
+          song={song}
+          keyOptions={getTranspositionKeyOptions(song.originalKey, false)}
+        />
 
         <div className="space-y-3">
           {orderedSections.map((section, index) => (

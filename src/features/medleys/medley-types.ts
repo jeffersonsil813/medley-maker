@@ -1,4 +1,5 @@
 import type { MusicalKey, Song, SongSection } from "@/features/library/song-types";
+import type { AccidentalPreference } from "@/features/transposition/transposition-engine";
 import { SONG_SECTION_LABELS } from "@/features/library/song-types";
 
 export type MedleyItem = {
@@ -21,9 +22,18 @@ export type Medley = {
   createdAt: string;
   updatedAt: string;
   items: MedleyItem[];
+  transposition?: MedleyTransposition;
 };
 
-export type MedleyInput = Pick<Medley, "title" | "description" | "items">;
+export type MedleyTransposition = {
+  referenceKey: MusicalKey;
+  targetKey: MusicalKey;
+  notation: AccidentalPreference;
+};
+
+export type MedleyInput = Pick<Medley, "title" | "description" | "items"> & {
+  transposition?: MedleyTransposition;
+};
 
 export function createMedleyItem(song: Song, section: SongSection, position: number): MedleyItem {
   return {

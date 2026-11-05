@@ -140,6 +140,17 @@ Nenhum banco de dados, serviço de autenticação, armazenamento de arquivos, AP
 | Organização da biblioteca | `src/features/library/` | Decisão tomada em conjunto; a rota Next correspondente fica em `src/app/biblioteca/`. |
 | Biblioteca de músicas | Primeira etapa funcional implementada | CRUD local, seções ChordPro, busca e interface responsiva. |
 | Criador de medleys | Etapa 2 definida e implementada | Lista livre de trechos, rotas dedicadas, snapshots independentes da biblioteca e persistência local versão 1. |
+| Transposição musical | Etapa 3 implementada | Motor independente em `src/features/transposition/`; prévia de músicas sem mutação, transposição do medley a partir dos snapshots e configuração de tom/notação persistida no próprio medley. |
+
+### 9.1 Transposição musical (Etapa 3)
+
+- O motor recebe conteúdo ChordPro e desloca apenas as fundamentais e os baixos de acordes invertidos, mantendo qualidade, letra e demais caracteres.
+- A preferência de acidentes (`sharp`, `flat` ou `auto`) é escolhida para cada operação, sem configuração global.
+- Na biblioteca, a transposição é somente uma prévia; a música original não é sobrescrita.
+- No medley, a tonalidade do primeiro trecho ordenado define a referência inicial. Os destinos permanecem no mesmo modo maior/menor da referência.
+- Aplicar uma transposição salva apenas `referenceKey`, `targetKey` e `notation` no medley. O conteúdo exibido é sempre recalculado a partir dos `contentSnapshot` e `originalKeySnapshot`; a aplicação nunca substitui snapshots nem acumula transposições.
+- Os registros anteriores seguem compatíveis: a propriedade `transposition` é opcional no formato armazenado.
+- Testes automatizados do motor usam `node:test`, sem dependência externa.
 
 ## 10. Etapas sugeridas para evoluir o documento
 
