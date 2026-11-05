@@ -35,7 +35,7 @@ Os detalhes a seguir permanecem em aberto e não devem ser tratados como requisi
 - Como músicas e cifras serão importadas de fontes externas além do cadastro manual da biblioteca.
 - Quais elementos uma cifra poderá conter além de texto e acordes.
 - Como transições entre trechos serão representadas.
-- Se os medleys serão exportados, compartilhados ou impressos.
+- Se os medleys serão compartilhados ou terão outros formatos de exportação além do PDF definido para a pré-visualização.
 - Se e como os dados serão sincronizados além do armazenamento local deste navegador.
 - Se haverá contas, colaboração ou acesso sem autenticação.
 - Se a IA fará parte do produto e, em caso afirmativo, quais tarefas realizará.
@@ -80,8 +80,9 @@ Decisões aprovadas em conjunto para o criador:
 - Cada item salva identificadores de origem e cópias do título, artista, tom, seção e conteúdo. Alterações e exclusões posteriores da biblioteca não alteram cifras de medleys existentes.
 - O medley contém identificador, nome, descrição opcional, datas de criação e atualização e a lista ordenada de itens.
 - A persistência usa `localStorage`, chave `medley-maker:medleys` e envelope versão `1`, separado do armazenamento da biblioteca.
+- Na pré-visualização, o usuário pode gerar e baixar um PDF do medley diretamente. O arquivo reflete a sequência e a tonalidade exibidas, sem alterar o armazenamento local.
 - O dashboard mantém sua estrutura visual e exibe os medleys reais mais recentes, com acesso à criação e à lista completa.
-- Não fazem parte desta etapa: transposição automática, exportação PDF, autenticação, banco de dados externo ou serviços de terceiros.
+- Não fazem parte desta etapa: transposição automática, autenticação, banco de dados externo ou serviços de terceiros.
 
 ## 7. Base técnica atual
 
@@ -141,6 +142,7 @@ Nenhum banco de dados, serviço de autenticação, armazenamento de arquivos, AP
 | Biblioteca de músicas | Primeira etapa funcional implementada | CRUD local, seções ChordPro, busca e interface responsiva. |
 | Criador de medleys | Etapa 2 definida e implementada | Lista livre de trechos, rotas dedicadas, snapshots independentes da biblioteca e persistência local versão 1. |
 | Transposição musical | Etapa 3 implementada | Motor independente em `src/features/transposition/`; prévia de músicas sem mutação, transposição do medley a partir dos snapshots e configuração de tom/notação persistida no próprio medley. |
+| Exportação de medley | PDF direto na pré-visualização | Gera arquivo com nome do medley, tom selecionado e conteúdo ChordPro unido na ordem exibida, com espaço entre trechos e sem cabeçalhos por trecho. |
 
 ### 9.1 Transposição musical (Etapa 3)
 
@@ -151,6 +153,7 @@ Nenhum banco de dados, serviço de autenticação, armazenamento de arquivos, AP
 - Aplicar uma transposição salva apenas `referenceKey`, `targetKey` e `notation` no medley. O conteúdo exibido é sempre recalculado a partir dos `contentSnapshot` e `originalKeySnapshot`; a aplicação nunca substitui snapshots nem acumula transposições.
 - Os registros anteriores seguem compatíveis: a propriedade `transposition` é opcional no formato armazenado.
 - Testes automatizados do motor usam `node:test`, sem dependência externa.
+- O teste automatizado também valida a junção dos conteúdos no PDF, preservando acordes e separando trechos com uma linha em branco.
 
 ## 10. Etapas sugeridas para evoluir o documento
 

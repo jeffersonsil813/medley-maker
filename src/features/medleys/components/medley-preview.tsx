@@ -6,7 +6,7 @@ import type { MusicalKey } from "@/features/library/song-types";
 import { TranspositionControls } from "@/features/transposition/components/transposition-controls";
 import { getTranspositionKeyOptions } from "@/features/transposition/transposition-options";
 import { previewMedleyTransposition, type AccidentalPreference } from "@/features/transposition/transposition-engine";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { Medley, MedleyTransposition } from "../medley-types";
 
 type MedleyPreviewProps = {
@@ -37,10 +37,21 @@ export function MedleyPreview({
   const [targetKey, setTargetKey] = useState<MusicalKey | "">(currentTargetKey ?? "");
   const [notation, setNotation] = useState<AccidentalPreference>(currentNotation);
   const [feedback, setFeedback] = useState<string | null>(null);
-  const orderedItems = [...items].sort((first, second) => first.position - second.position);
-  const transposedPreview = targetKey && referenceKey
-    ? previewMedleyTransposition(items, targetKey, notation, referenceKey)
-    : null;
+  const [pdfFeedback, setPdfFeedback] = useState<string | null>(null);
+  const orderedItems = useMemo(
+    () => [...items].sort((first, second) => first.position - second.position),
+    [items],
+  );
+  const transposedPreview = useMemo(
+    () => targetKey && referenceKey
+      ? previewMedleyTransposition(orderedItems, targetKey, notation, referenceKey)
+      : null,
+    [orderedItems, targetKey, notation, referenceKey],
+  );
+  const transposedItemsById = useMemo(
+    () => new Map(transposedPreview?.items.map((entry) => [entry.source.id, entry]) ?? []),
+    [transposedPreview],
+  );
 
   function applyTransposition() {
     if (!referenceKey || !targetKey) return;
@@ -61,6 +72,27 @@ export function MedleyPreview({
     setFeedback("Alteração pendente descartada.");
   }
 
+  async function exportPdf() {
+    if (orderedItems.length === 0 || !targetKey) return;
+
+    try {
+      const { downloadMedleyPdf } = await import("../medley-pdf");
+      downloadMedleyPdf(
+        title,
+        targetKey,
+        orderedItems.map((item) => {
+          const transposedItem = transposedItemsById.get(item.id);
+          return {
+            content: transposedItem?.content ?? item.contentSnapshot,
+          };
+        }),
+      );
+      setPdfFeedback("PDF gerado e baixado.");
+    } catch {
+      setPdfFeedback("Não foi possível gerar o PDF. Tente novamente.");
+    }
+  }
+
   return (
     <section className="mx-auto max-w-3xl rounded-[24px] border border-white/[0.08] bg-[#111512] p-5 sm:p-8">
       <div className="mb-7 flex flex-wrap items-center gap-3">
@@ -71,6 +103,17 @@ export function MedleyPreview({
       <p className="text-[10px] font-semibold uppercase tracking-[0.17em] text-[#9a896b]">Pré-visualização</p>
       <h1 className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-[#edf0eb]">{title || "Medley sem título"}</h1>
       {description && <p className="mt-2 text-sm leading-6 text-[#929b92]">{description}</p>}
+      <div className="mt-5 flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          onClick={exportPdf}
+          disabled={orderedItems.length === 0 || !targetKey}
+          className="inline-flex h-10 items-center justify-center rounded-xl bg-[#d3b486] px-4 text-xs font-semibold text-[#16140f] transition hover:bg-[#e2c69b] disabled:cursor-not-allowed disabled:opacity-45"
+        >
+          Exportar PDF
+        </button>
+        {pdfFeedback && <p role="status" className="text-xs text-[#b7c0b6]">{pdfFeedback}</p>}
+      </div>
       <div className="my-7 h-px bg-white/[0.08]" />
       <section className="mb-7 rounded-2xl border border-white/[0.075] bg-[#0c100d] p-4 sm:p-5">
         <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
@@ -112,7 +155,7 @@ export function MedleyPreview({
       ) : (
         <ol className="space-y-7">
           {orderedItems.map((item, index) => {
-            const transposedItem = transposedPreview?.items.find((entry) => entry.source.id === item.id);
+            const transposedItem = transposedItemsById.get(item.id);
             return (
             <li key={item.id} className="border-b border-white/[0.06] pb-6 last:border-0">
               <div className="mb-3 flex items-baseline gap-2">
