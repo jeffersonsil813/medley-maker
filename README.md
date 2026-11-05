@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Medley Maker
 
-## Getting Started
+Medley Maker is a dark, musician-focused web app for organizing song charts and building medleys from selected sections of multiple songs. It is designed especially for worship musicians who need a clear, practical way to prepare a continuous set.
 
-First, run the development server:
+## Screenshots
+
+### Desktop
+
+![Medley Maker dashboard on desktop](docs/screenshots/desktop-dashboard.png)
+
+### Tablet
+
+![Song library on a tablet-sized screen](docs/screenshots/tablet-library.png)
+
+### Mobile
+
+![Medleys page on a compact mobile-sized screen](docs/screenshots/mobile-medleys.png)
+
+## Features
+
+- **Song library:** create, view, edit, delete, and search songs by title or artist.
+- **ChordPro-style charts:** organize lyrics and chords into named sections such as verses, choruses, bridges, and endings.
+- **Medley builder:** combine selected song sections, arrange their order, and keep independent snapshots of the selected content.
+- **Chord transposition:** preview a song in another key or transpose a medley while preserving its original snapshots.
+- **PDF export:** export a medley chart from its preview, formatted as one continuous song.
+- **Local persistence:** songs and medleys are stored in the browser's `localStorage`; no account or external database is required.
+- **Responsive dark interface:** designed for desktop, tablet, and mobile screens.
+
+## Tech stack
+
+- Next.js 16 with the App Router
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- jsPDF for PDF generation
+- Browser `localStorage` for persistence
+- Node.js and npm for development
+
+## Run locally
+
+### Requirements
+
+- Node.js 20 or later
+- npm (included with Node.js)
+
+### Install and start
 
 ```bash
+git clone https://github.com/jeffersonsil813/medley-maker.git
+cd medley-maker
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser. The development server reloads the app when source files change.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To run the available checks and create a production build:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint
+npm test
+npm run build
+```
 
-## Learn More
+## Data storage
 
-To learn more about Next.js, take a look at the following resources:
+The current version stores all song and medley data in the browser's `localStorage`. Data remains in the same browser profile on that device. Clearing browser storage removes this local data; it is not synchronized between devices.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Development
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The project was developed with support from ChatGPT Codex throughout the planning, implementation, debugging, and verification workflow.
 
-## Deploy on Vercel
+## Live demo
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Deployment URL:** _To be added._
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+No open-source license has been added yet.
