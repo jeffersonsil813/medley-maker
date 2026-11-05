@@ -18,11 +18,10 @@ type MedleyEditorProps = {
   canWrite: boolean;
   storageError: string | null;
   onSave: (input: Pick<Medley, "title" | "description" | "items"> & { transposition?: MedleyTransposition }) => Medley | null;
-  onApplyTransposition: (transposition: MedleyTransposition | null) => boolean;
   onDelete: () => boolean;
 };
 
-export function MedleyEditor({ songs, initialMedley, canWrite, storageError, onSave, onApplyTransposition, onDelete }: MedleyEditorProps) {
+export function MedleyEditor({ songs, initialMedley, canWrite, storageError, onSave, onDelete }: MedleyEditorProps) {
   const router = useRouter();
   const [customTitle, setCustomTitle] = useState(initialMedley?.title ?? "");
   const [hasCustomTitle, setHasCustomTitle] = useState(Boolean(initialMedley));
@@ -41,30 +40,31 @@ export function MedleyEditor({ songs, initialMedley, canWrite, storageError, onS
     setFeedback(null);
   }
 
-  function save() {
+  function save(nextTransposition = transposition) {
     if (!title.trim()) {
       setFeedback("Informe um nome para o medley.");
       setIsPreview(false);
-      return;
+      return false;
     }
     if (items.length === 0) {
       setFeedback("Adicione pelo menos um trecho antes de salvar.");
       setIsPreview(false);
-      return;
+      return false;
     }
     setIsSaving(true);
-    const saved = onSave({ title: title.trim(), description: description.trim(), items: items.map((item, position) => ({ ...item, position })), ...(transposition ? { transposition } : {}) });
+    const saved = onSave({ title: title.trim(), description: description.trim(), items: items.map((item, position) => ({ ...item, position })), ...(nextTransposition ? { transposition: nextTransposition } : {}) });
     setIsSaving(false);
     if (!saved) {
       setFeedback("Não foi possível salvar. Verifique o armazenamento do navegador e tente novamente.");
-      return;
+      return false;
     }
     const status = isEditing ? "updated" : "created";
     router.replace(`/medleys?saved=${status}&title=${encodeURIComponent(saved.title)}`);
+    return true;
   }
 
   function applyTransposition(next: MedleyTransposition) {
-    if (initialMedley && !onApplyTransposition(next)) return false;
+    if (initialMedley) return save(next);
     setTransposition(next);
     return true;
   }
@@ -80,7 +80,7 @@ export function MedleyEditor({ songs, initialMedley, canWrite, storageError, onS
   }
 
   if (isPreview) {
-    return <MedleyPreview title={title} description={description} items={items} onBack={() => setIsPreview(false)} onSave={save} canSave={canWrite} isSaving={isSaving} appliedTransposition={transposition} isSaved={Boolean(initialMedley)} canApplyTransposition={canWrite} onApplyTransposition={applyTransposition} />;
+    return <MedleyPreview title={title} description={description} items={items} onBack={() => setIsPreview(false)} appliedTransposition={transposition} isSaved={Boolean(initialMedley)} canApplyTransposition={canWrite} onApplyTransposition={applyTransposition} />;
   }
 
   return (
@@ -143,7 +143,7 @@ export function MedleyEditor({ songs, initialMedley, canWrite, storageError, onS
 
       <div className="mt-5 flex flex-col-reverse justify-end gap-2 sm:flex-row">
         <Link href="/medleys" className="inline-flex h-11 items-center justify-center rounded-xl border border-white/[0.08] px-5 text-xs font-medium text-[#a3aca3] transition hover:bg-white/[0.04]">Cancelar</Link>
-        <button type="button" onClick={save} disabled={!canWrite || isSaving} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#d3b486] px-5 text-xs font-semibold text-[#16140f] transition hover:bg-[#e2c69b] disabled:cursor-not-allowed disabled:opacity-50"><DashboardIcon name="check" size={15} />{isSaving ? "Salvando…" : "Salvar medley"}</button>
+        <button type="button" onClick={() => save()} disabled={!canWrite || isSaving} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#d3b486] px-5 text-xs font-semibold text-[#16140f] transition hover:bg-[#e2c69b] disabled:cursor-not-allowed disabled:opacity-50"><DashboardIcon name="check" size={15} />{isSaving ? "Salvando…" : "Salvar medley"}</button>
       </div>
       {isDeleteDialogOpen && initialMedley && (
         <DeleteMedleyDialog

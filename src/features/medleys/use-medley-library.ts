@@ -3,7 +3,7 @@
 import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
 import { createLocalId } from "@/features/library/song-types";
 import { getMedleySnapshot, parseMedleySnapshot, subscribeToMedleys, writeMedleys } from "./medley-storage";
-import type { Medley, MedleyInput, MedleyTransposition } from "./medley-types";
+import type { Medley, MedleyInput } from "./medley-types";
 
 export function useMedleyLibrary() {
   const snapshot = useSyncExternalStore(
@@ -66,26 +66,6 @@ export function useMedleyLibrary() {
     [commit, medleys],
   );
 
-  const setMedleyTransposition = useCallback(
-    (id: string, transposition: MedleyTransposition | null) => {
-      const existing = medleys.find((medley) => medley.id === id);
-      if (!existing) return null;
-
-      const withoutTransposition = { ...existing };
-      delete withoutTransposition.transposition;
-      const updated: Medley = {
-        ...withoutTransposition,
-        ...(transposition ? { transposition } : {}),
-        updatedAt: new Date().toISOString(),
-      };
-
-      return commit(medleys.map((medley) => (medley.id === id ? updated : medley)))
-        ? updated
-        : null;
-    },
-    [commit, medleys],
-  );
-
   const deleteMedley = useCallback(
     (id: string) => {
       if (!medleys.some((medley) => medley.id === id)) return false;
@@ -94,5 +74,5 @@ export function useMedleyLibrary() {
     [commit, medleys],
   );
 
-  return { medleys, isLoaded, canWrite, storageError, addMedley, updateMedley, setMedleyTransposition, deleteMedley };
+  return { medleys, isLoaded, canWrite, storageError, addMedley, updateMedley, deleteMedley };
 }

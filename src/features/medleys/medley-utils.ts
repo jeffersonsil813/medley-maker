@@ -1,4 +1,4 @@
-import type { MedleyItem } from "./medley-types";
+import type { Medley, MedleyItem } from "./medley-types";
 
 export function normalizeMedleySearch(value: string) {
   return value
@@ -48,4 +48,12 @@ export function getSuggestedMedleyTitle(items: MedleyItem[]) {
   }
 
   return [...uniqueSongs.values()].join(" + ");
+}
+
+export function getCurrentMedleyKey(medley: Pick<Medley, "items" | "transposition">) {
+  if (medley.transposition) return medley.transposition.targetKey;
+
+  return [...medley.items]
+    .sort((first, second) => first.position - second.position)[0]
+    ?.originalKeySnapshot ?? null;
 }

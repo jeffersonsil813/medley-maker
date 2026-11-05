@@ -14,9 +14,6 @@ type MedleyPreviewProps = {
   description: string;
   items: Medley["items"];
   onBack: () => void;
-  onSave: () => void;
-  canSave: boolean;
-  isSaving: boolean;
   appliedTransposition: MedleyTransposition | null;
   isSaved: boolean;
   canApplyTransposition: boolean;
@@ -28,9 +25,6 @@ export function MedleyPreview({
   description,
   items,
   onBack,
-  onSave,
-  canSave,
-  isSaving,
   appliedTransposition,
   isSaved,
   canApplyTransposition,
@@ -56,7 +50,7 @@ export function MedleyPreview({
       applied
         ? isSaved
           ? `Transposição aplicada e salva em ${targetKey}.`
-          : `Prévia em ${targetKey} aplicada ao rascunho. Salve o medley para persistir.`
+          : `Prévia em ${targetKey} aplicada ao rascunho. Volte ao editor para salvar o medley.`
         : "Não foi possível aplicar a transposição. Verifique o armazenamento local e tente novamente.",
     );
   }
@@ -69,12 +63,9 @@ export function MedleyPreview({
 
   return (
     <section className="mx-auto max-w-3xl rounded-[24px] border border-white/[0.08] bg-[#111512] p-5 sm:p-8">
-      <div className="mb-7 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-7 flex flex-wrap items-center gap-3">
         <button type="button" onClick={onBack} className="inline-flex items-center gap-2 text-xs text-[#a2aba2] hover:text-white">
           <DashboardIcon name="chevron-right" size={15} className="rotate-180" /> Voltar ao editor
-        </button>
-        <button type="button" onClick={onSave} disabled={!canSave || isSaving} className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#d3b486] px-4 text-xs font-semibold text-[#16140f] transition hover:bg-[#e2c69b] disabled:cursor-not-allowed disabled:opacity-50">
-          <DashboardIcon name="check" size={15} /> {isSaving ? "Salvando…" : "Salvar medley"}
         </button>
       </div>
       <p className="text-[10px] font-semibold uppercase tracking-[0.17em] text-[#9a896b]">Pré-visualização</p>

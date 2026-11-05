@@ -35,7 +35,6 @@ export function MedleyBuilderClient({ medleyId }: { medleyId?: string }) {
       canWrite={songLibrary.canWrite && medleyLibrary.canWrite}
       storageError={songLibrary.storageError ?? medleyLibrary.storageError}
       onSave={(input) => medley ? medleyLibrary.updateMedley(medley.id, input) : medleyLibrary.addMedley(input)}
-      onApplyTransposition={(transposition) => Boolean(medley && medleyLibrary.setMedleyTransposition(medley.id, transposition))}
       onDelete={() => Boolean(medley && medleyLibrary.deleteMedley(medley.id))}
     />
   );

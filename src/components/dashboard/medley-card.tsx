@@ -6,6 +6,7 @@ export type MedleyCardData = {
   id: string;
   title: string;
   songs: string[];
+  currentKey: string | null;
   sectionCount: number;
   updatedAt: string;
   artwork: string;
@@ -63,6 +64,13 @@ export function MedleyCard({ medley, onDelete }: { medley: MedleyCardData; onDel
       <div className="mt-3 flex items-center justify-between gap-2 border-t border-white/[0.065] px-1 pt-3.5 text-[11px] text-[#778078]">
         <div className="flex min-w-0 items-center justify-between gap-3">
           <span>{medley.songs.length} {medley.songs.length === 1 ? "música" : "músicas"}</span>
+          {medley.currentKey && (
+            <span className="inline-flex items-center rounded-md border border-[#c9a875]/15 bg-[#c9a875]/[0.07] px-1.5 py-1 text-[10px] font-medium text-[#d6b98c]">
+              Tom {medley.currentKey}
+            </span>
+          )}
+        </div>
+        <div className="flex min-w-0 items-center gap-2">
           <span className="inline-flex items-center gap-1.5">
             <DashboardIcon name="calendar" size={13} />
             {formatUpdatedAt(medley.updatedAt)}

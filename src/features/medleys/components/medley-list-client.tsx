@@ -6,7 +6,7 @@ import { Suspense } from "react";
 import { DashboardIcon } from "@/components/dashboard/dashboard-icons";
 import { EmptyMedleys } from "@/components/dashboard/empty-medleys";
 import { MedleyCard } from "@/components/dashboard/medley-card";
-import { normalizeMedleySearch } from "../medley-utils";
+import { getCurrentMedleyKey, normalizeMedleySearch } from "../medley-utils";
 import type { Medley } from "../medley-types";
 import { useMedleyLibrary } from "../use-medley-library";
 import { DeleteMedleyDialog } from "./delete-medley-dialog";
@@ -141,6 +141,7 @@ export function MedleyListClient() {
                   id: medley.id,
                   title: medley.title,
                   songs: [...new Set(medley.items.map((item) => item.songTitleSnapshot))],
+                  currentKey: getCurrentMedleyKey(medley),
                   sectionCount: medley.items.length,
                   updatedAt: medley.updatedAt,
                   artwork: artworkPalettes[index % artworkPalettes.length],

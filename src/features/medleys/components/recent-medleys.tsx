@@ -2,7 +2,7 @@
 
 import { EmptyMedleys } from "@/components/dashboard/empty-medleys";
 import { MedleyCard } from "@/components/dashboard/medley-card";
-import { getMedleySongs } from "../medley-utils";
+import { getCurrentMedleyKey, getMedleySongs } from "../medley-utils";
 import { useMedleyLibrary } from "../use-medley-library";
 
 const artworkPalettes = [
@@ -57,6 +57,7 @@ export function RecentMedleys() {
                 id: medley.id,
                 title: medley.title,
                 songs: getMedleySongs(medley.items).map((item) => item.songTitleSnapshot),
+                currentKey: getCurrentMedleyKey(medley),
                 sectionCount: medley.items.length,
                 updatedAt: medley.updatedAt,
                 artwork: artworkPalettes[index % artworkPalettes.length],
