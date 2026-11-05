@@ -29,7 +29,7 @@ export function MedleyBuilderClient({ medleyId }: { medleyId?: string }) {
 
   return (
     <MedleyEditor
-      key={medley?.id ?? "new-medley"}
+      key={medley ? `${medley.id}:${medley.updatedAt}` : "new-medley"}
       songs={songLibrary.songs}
       initialMedley={medley}
       canWrite={songLibrary.canWrite && medleyLibrary.canWrite}
